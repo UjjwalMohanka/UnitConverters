@@ -861,8 +861,19 @@ function convertArea() {
     const res = sqm * areaFactors[to];
     document.getElementById('areaToValue').value = res;
     document.getElementById('areaResult').innerHTML = `
-        <strong>${v} ${from} = ${res} ${to}</strong>
-    `;
+    <strong>${v} ${getAreaUnitName(from)} = ${res} ${getAreaUnitName(to)}</strong>
+`;
+
+function getAreaUnitName(unit) {
+    return {
+        sqm: 'square meter(s)',
+        sqkm: 'square kilometer(s)',
+        sqft: 'square foot/feet',
+        sqyd: 'square yard(s)',
+        acre: 'acre(s)',
+        hectare: 'hectare(s)'
+    }[unit] || unit;
+}
 }
 
 // --- VOLUME CONVERTER ---
