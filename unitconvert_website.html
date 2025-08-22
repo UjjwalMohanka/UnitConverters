@@ -843,7 +843,149 @@
             }
         }
 
-        // You can add similar converter setup and logic for area, volume, speed, etc. here.
+        // --- AREA CONVERTER ---
+const areaFactors = {
+    sqm: 1,
+    sqkm: 1e-6,
+    sqft: 10.7639,
+    sqyd: 1.19599,
+    acre: 0.000247105,
+    hectare: 0.0001
+};
+function convertArea() {
+    const v = parseFloat(document.getElementById('areaFromValue').value);
+    const from = document.getElementById('areaFromUnit').value;
+    const to = document.getElementById('areaToUnit').value;
+    if (isNaN(v)) return;
+    const sqm = v / areaFactors[from];
+    const res = sqm * areaFactors[to];
+    document.getElementById('areaToValue').value = res;
+    document.getElementById('areaResult').innerHTML = `
+        <strong>${v} ${from} = ${res} ${to}</strong>
+    `;
+}
+
+// --- VOLUME CONVERTER ---
+const volumeFactors = {
+    l: 1,
+    ml: 1000,
+    m3: 0.001,
+    ft3: 0.0353147,
+    gal: 0.264172
+};
+function convertVolume() {
+    const v = parseFloat(document.getElementById('volumeFromValue').value);
+    const from = document.getElementById('volumeFromUnit').value;
+    const to = document.getElementById('volumeToUnit').value;
+    if (isNaN(v)) return;
+    const liters = v / volumeFactors[from];
+    const res = liters * volumeFactors[to];
+    document.getElementById('volumeToValue').value = res;
+    document.getElementById('volumeResult').innerHTML = `
+        <strong>${v} ${from} = ${res} ${to}</strong>
+    `;
+}
+
+// --- SPEED CONVERTER ---
+const speedFactors = {
+    mps: 1,
+    kmph: 3.6,
+    mph: 2.23694,
+    knot: 1.94384
+};
+function convertSpeed() {
+    const v = parseFloat(document.getElementById('speedFromValue').value);
+    const from = document.getElementById('speedFromUnit').value;
+    const to = document.getElementById('speedToUnit').value;
+    if (isNaN(v)) return;
+    const mps = v / speedFactors[from];
+    const res = mps * speedFactors[to];
+    document.getElementById('speedToValue').value = res;
+    document.getElementById('speedResult').innerHTML = `
+        <strong>${v} ${from} = ${res} ${to}</strong>
+    `;
+}
+
+// --- PRESSURE CONVERTER ---
+const pressureFactors = {
+    pa: 1,
+    kpa: 0.001,
+    bar: 1e-5,
+    atm: 9.86923e-6,
+    psi: 0.000145038
+};
+function convertPressure() {
+    const v = parseFloat(document.getElementById('pressureFromValue').value);
+    const from = document.getElementById('pressureFromUnit').value;
+    const to = document.getElementById('pressureToUnit').value;
+    if (isNaN(v)) return;
+    const pa = v / pressureFactors[from];
+    const res = pa * pressureFactors[to];
+    document.getElementById('pressureToValue').value = res;
+    document.getElementById('pressureResult').innerHTML = `
+        <strong>${v} ${from} = ${res} ${to}</strong>
+    `;
+}
+
+// --- CURRENCY CONVERTER (Demo rates, replace with live rates for production) ---
+const currencyRates = {
+    usd: 1,
+    eur: 0.93,
+    inr: 83,
+    jpy: 145
+};
+function convertCurrency() {
+    const v = parseFloat(document.getElementById('currencyFromValue').value);
+    const from = document.getElementById('currencyFromUnit').value;
+    const to = document.getElementById('currencyToUnit').value;
+    if (isNaN(v)) return;
+    const usd = v / currencyRates[from];
+    const res = usd * currencyRates[to];
+    document.getElementById('currencyToValue').value = res;
+    document.getElementById('currencyResult').innerHTML = `
+        <strong>${v} ${from} = ${res} ${to}</strong>
+    `;
+}
+
+// --- SETUP EVENT LISTENERS ON DOMContentLoaded ---
+document.addEventListener('DOMContentLoaded', function() {
+    // Area
+    ['areaFromValue','areaFromUnit','areaToUnit'].forEach(id=>document.getElementById(id).addEventListener('input',convertArea));
+    // Volume
+    ['volumeFromValue','volumeFromUnit','volumeToUnit'].forEach(id=>document.getElementById(id).addEventListener('input',convertVolume));
+    // Speed
+    ['speedFromValue','speedFromUnit','speedToUnit'].forEach(id=>document.getElementById(id).addEventListener('input',convertSpeed));
+    // Pressure
+    ['pressureFromValue','pressureFromUnit','pressureToUnit'].forEach(id=>document.getElementById(id).addEventListener('input',convertPressure));
+    // Currency
+    ['currencyFromValue','currencyFromUnit','currencyToUnit'].forEach(id=>document.getElementById(id).addEventListener('input',convertCurrency));
+});
+
+// --- EXTEND swapUnits FUNCTION ---
+function swapUnits(type) {
+    const fromUnit = document.getElementById(type + 'FromUnit');
+    const toUnit = document.getElementById(type + 'ToUnit');
+    const fromValue = document.getElementById(type + 'FromValue');
+    const toValue = document.getElementById(type + 'ToValue');
+    const tempUnit = fromUnit.value;
+    fromUnit.value = toUnit.value;
+    toUnit.value = tempUnit;
+    if (toValue && toValue.value && !isNaN(parseFloat(toValue.value))) {
+        fromValue.value = toValue.value;
+        toValue.value = '';
+    }
+    switch(type) {
+        case 'area': convertArea(); break;
+        case 'volume': convertVolume(); break;
+        case 'speed': convertSpeed(); break;
+        case 'pressure': convertPressure(); break;
+        case 'currency': convertCurrency(); break;
+        // existing cases...
+        case 'length': convertLength(); break;
+        case 'weight': convertWeight(); break;
+        case 'temperature': convertTemperature(); break;
+    }
+}
 
     </script>
 </body>
